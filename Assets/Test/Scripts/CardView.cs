@@ -26,6 +26,7 @@ namespace AxGrid.Test
         public void OnPointerClick(PointerEventData eventData)
         {
             //s Debug.Log("click" + name);
+            GetComponentInParent<CardCollecView>().OnDelete(this);
             Settings.Model.EventManager.Invoke("OnSelectCard", Value);
         }
     }

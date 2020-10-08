@@ -9,7 +9,7 @@ namespace AxGrid.Test
     public class CardCollecView : MonoBehaviourExt
     {
 
-
+        private static CardView _cashCardView; // поле под удаленную из списка карточку
         [SerializeField] private GameObject prefab;
         List<CardView> views;
         [SerializeField] private string fieldName;
@@ -19,9 +19,10 @@ namespace AxGrid.Test
         public void start()
         {
             Settings.Model.EventManager.AddAction($"On{fieldName}Changed", Refresh); // подписываемся на изменения поля в моделе
-            Settings.Model.EventManager.AddAction("OnSelectCard", new DEventMethod(OnDelete)); // подписываемся на нажатие по карточке
             views = new List<CardView>();
         }
+
+
 
         [OnDelay(0.02f)] //задержка для того, чтобы в модели успела создаться переменная
         public void DelayStart()
@@ -38,30 +39,38 @@ namespace AxGrid.Test
             CardView cardView = Instantiate(prefab, transform.position, Quaternion.identity, transform).GetComponent<CardView>();
             cardView.InitUICard(dto.cardName, Resources.Load<Sprite>(dto.spriteName), dto.Value);
             views.Add(cardView);
+
         }
 
         /// <summary>
         /// Удаление карточки по id
         /// </summary>
-        void OnDelete(params object[] array)
+        public void OnDelete(CardView cardView)
         {
-            int idCard = (int)array[0];
-            for (int i = 0; i < views.Count; i++)
+            views.Remove(cardView);
+            print("remove" + name);
+            if (_cashCardView == null)
             {
-                if (views[i].Value == idCard)
-                {
-                    CardView cardView = views[i];
-                    views.RemoveAt(i);
-                    Destroy(cardView.gameObject);
-
-                }
+                print("set");
+                _cashCardView = cardView;
             }
             MovingCard(views);
         }
         void Refresh()
         {
             var newList = Model.Get<List<Card>>(fieldName);
-            if (newList.Count > views.Count) Create(newList[newList.Count - 1]);
+            if (newList.Count > views.Count)
+            {
+                print("add1");
+                if (_cashCardView != null)
+                {
+                    views.Add(_cashCardView);
+                    _cashCardView.RectTransf.SetParent(transform);
+                    print("add2");
+                    _cashCardView = null;
+                }
+                else Create(newList[newList.Count - 1]);
+            }
             MovingCard(views);
         }
 

@@ -1,9 +1,6 @@
-﻿using AxGrid;
-using AxGrid.FSM;
+﻿using AxGrid.FSM;
 using AxGrid.Model;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace AxGrid.Test
 {
@@ -45,7 +42,8 @@ namespace AxGrid.Test
         /// </summary>
         public void OnMoveCard(params object[] array)
         {
-            int id = array.Length > 0 ? (int)array[0]:-1;
+            int id = (int)array[0];
+
             List<string> fieldNames = Settings.Model.Get<List<string>>("fieldsNameListCardsAll");
 
             // ищем карточку по id во всех списках
@@ -56,7 +54,7 @@ namespace AxGrid.Test
                 if (indexCard != -1)
                 {
                     // перемещаем карточку в другой список
-                    Settings.Model.Get<List<Card>>(fieldNames[i<fieldNames.Count-1?i+1:0]).Add(new Card());
+                    Settings.Model.Get<List<Card>>(fieldNames[i<fieldNames.Count-1?i+1:0]).Add(Settings.Model.Get<List<Card>>(fieldNames[i])[indexCard]);
                     Settings.Model.Refresh(fieldNames[i<fieldNames.Count-1?i+1:0]);
                     Settings.Model.Get<List<Card>>(fieldNames[i]).RemoveAt(indexCard);
                     Settings.Model.Refresh(fieldNames[i]);
