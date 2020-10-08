@@ -12,9 +12,7 @@ namespace AxGrid.Test
         [Enter]
         public void InitModel()
         {
-            Settings.Model.Set("Cards1", new List<Card>());
-            Settings.Model.Set("Cards2", new List<Card>());
-            Settings.Model.Set("CardsCount", 0);
+            Settings.Model.Set("fieldsNameListCardsAll", new List<string>());
             Parent.Change("ReadyCards");
         }
 

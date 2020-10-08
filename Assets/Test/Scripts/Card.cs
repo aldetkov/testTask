@@ -5,13 +5,15 @@ namespace AxGrid.Test
 
     public class Card
     {
-        public int value;
+        static int id;
+        public int Value { get; private set; }
         public string cardName;
         public string spriteName;
 
         public Card()
         {
-            value = Random.Range(0, 10);
+            Value = id;
+            id++;
             cardName = "Gold";
             spriteName = "red_card_06";
         }
